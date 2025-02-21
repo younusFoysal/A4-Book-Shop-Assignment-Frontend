@@ -1,14 +1,11 @@
-// Import Swiper styles
-import "swiper/css";
-import { Autoplay, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+
 import GltfViewerHome from "@/components/home/GltfViewerHome.tsx";
 
 
 const Hero = () => {
   return (
-      <div className="relative py-8 overflow-hidden sm:py-8 lg:py-2">
-        <div className="relative px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+      <div className="container mx-auto relative py-8 overflow-hidden sm:py-8 lg:py-2">
+        <div className="relative px-4 mx-auto sm:px-6 lg:px-8 ">
           <div className="grid items-center grid-cols-1 gap-y-12 lg:grid-cols-2 gap-x-16 xl:gap-x-24">
 
             {/* Text and Button Section - Left Side */}
@@ -25,7 +22,7 @@ const Hero = () => {
                     <input
                         type="email"
                         placeholder="Email where we'll send the book"
-                        className="w-2/3 px-4 py-3 border rounded-[4px] text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-blue-500 transition-all  outline-none  font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white  border-[#04345c]/70 "
+                        className="w-2/3 px-4 py-3 border rounded-[4px] text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all  outline-none  font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white  border-[#04345c]/70 "
                     />
                   </div>
                   <button
