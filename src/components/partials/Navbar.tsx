@@ -35,12 +35,12 @@ export default function Navbar() {
               <div className="flex items-center justify-end gap-2">
                 <button
                     onClick={() => navigate('/signup')}
-                    className="py-2 px-6 bg-white border border-[#04345c] text-[#04345c] hover:text-white rounded-lg font-semibold hover:bg-[#032a49] transition-colors duration-500">
+                    className="py-2 px-6 bg-white border border-[#04345c] text-[#04345c] text-center hover:text-white rounded-3xl font-semibold hover:bg-[#032a49] transition-colors duration-500">
                   Sign Up
                 </button>
                 <button
                     onClick={() => navigate('/login')}
-                    className="py-2 px-6 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-lg font-semibold transition-colors duration-500">
+                    className="py-2 px-6 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-3xl font-semibold transition-colors duration-500">
                   Sign In
                 </button>
               </div>
