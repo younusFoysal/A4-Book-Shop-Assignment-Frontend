@@ -11,10 +11,11 @@ const Hero = () => {
 
             {/* Text and Button Section - Left Side */}
             <div className="max-w-lg mx-auto text-center lg:max-w-none lg:mx-0 lg:text-left">
-              <p className="text-base font-medium text-[#04345c]">Read books to know more </p>
+              <p className="text-base font-medium text-[#04345c]">A better way to buy books online </p>
 
               <h1 className="mt-5 text-3xl uppercase font-bold text-[#04345c] lg:mt-8 sm:text-4xl xl:text-5xl xl:leading-tight">
-                Learn to earn 💰 <br/> without losing time.
+                Save 50% off list prices on your next favourite read!
+                {/*Learn to earn 💰 <br/> without losing time.*/}
               </h1>
 
               <div className="mt-10 lg:mt-14">

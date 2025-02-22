@@ -53,7 +53,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
                         <span className="text-xl font-bold text-[#04345c]">${product.price}</span>
                     </div>
                     <button
-                        className="text-sm border-0 mt-2 w-full px-4 py-3 bg-[#04345c] font-medium text-white shadow-md rounded-2xl hover:bg-[#048ed6] hover:shadow-md transition-colors duration-300">
+                        className="text-sm border-0 mt-2 w-full px-4 py-3 bg-[#04345c] font-medium text-white shadow-lg rounded-2xl hover:bg-[#048ed6] hover:shadow-md transition-colors duration-300">
                         View Details
                     </button>
                 </div>
