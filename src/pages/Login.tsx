@@ -1,98 +1,127 @@
+/* eslint-disable no-empty-pattern */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-import { useActionState } from "react";
-import { toast } from "sonner";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import UseUser from "@/hook/UseUser";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
-import { verifyToken } from "@/utils/VerifyToken";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hook";
-import { Navigate } from "react-router-dom";
-import UseUser from "@/hook/UseUser";
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [login, { error }] = useLoginMutation();
+import { verifyToken } from "@/utils/VerifyToken";
+import { useActionState } from "react";
+
+import { Link, Navigate } from "react-router-dom";
+import { toast } from "sonner";
+
+type LoginForm = {
+  email: string;
+  password: string;
+};
+
+const Login = () => {
+  const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
-  const data = UseUser();
+  const user = UseUser();
+
   const [state, formAction] = useActionState(
-    async (prevState: any, formData: FormData) => {
-      try {
-        const userdata = Object.fromEntries(formData.entries());
-        const res = await login(userdata);
-
-        const user = verifyToken(res.data.data.token);
-
-        dispatch(setUser({ user: user, token: res.data.data.token }));
-        toast.success("Logged in successfully");
-      } catch (error) {
-        toast.error(error.message);
-      }
-    },
-    null
+      async (_prevState: any, formData: FormData) => {
+        try {
+          const isRememberChecked = formData.get("remember-me");
+          if (!isRememberChecked) {
+            toast.error("Please check 'Remember me' before logging in.");
+            return;
+          }
+          const userdata: LoginForm = Object.fromEntries(
+              formData.entries()
+          ) as LoginForm;
+          const res = await login(userdata).unwrap();
+          const userData = verifyToken(res.data.token);
+          dispatch(setUser({ user: userData, token: res.data.token }));
+          toast.success("Logged in successfully");
+        } catch (error: any) {
+          toast.error(error?.message || "Login failed");
+        }
+      },
+      null
   );
 
-  if (data) {
-    return <Navigate to="/" />;
-  }
+  if (user) return <Navigate to="/" />;
 
   return (
-    <div className="w-full flex   items-center justify-center h-screen">
-      <div
-        className={cn("flex flex-col gap-6 w-[500px]", className)}
-        {...props}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form action={formAction}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="email">Email</Label>
-                  </div>
-                  <Input id="email" type="email" name="email" required />
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                  </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    name="password"
-                    required
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-primary-jext hover:bg-primary-hover "
-                >
-                  Login
-                </Button>
-                {state?.error && (
-                  <div className="mt-4 text-center text-sm text-red-500">
-                    {state.error}
-                  </div>
-                )}
+      <div className="font-[sans-serif] bg-white flex items-center justify-center md:h-screen p-4">
+        <div className="shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)] max-w-6xl max-md:max-w-lg rounded-md p-6">
+          <div className="grid md:grid-cols-2 items-center gap-8">
+            <div className="max-md:order-1">
+              <img
+                  src="https://readymadeui.com/signin-image.webp"
+                  className="w-full aspect-[12/11] object-contain"
+                  alt="login-image"
+              />
+            </div>
+            <form className="md:max-w-md w-full mx-auto" action={formAction}>
+              <div className="mb-12">
+                <h3 className="text-4xl font-bold text-green-500">Sign in</h3>
               </div>
-              <div className="mt-4 text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link to="/signup" className="underline underline-offset-4">
-                  Sign up
-                </Link>
+              <div className="relative flex items-center">
+                <input
+                    name="email"
+                    type="email"
+                    required
+                    className="w-full text-sm border-b border-gray-300 focus:border-green-500 px-2 py-3 outline-none"
+                    placeholder="Enter email"
+                />
+              </div>
+              <div className="mt-8 relative flex items-center">
+                <input
+                    name="password"
+                    type="password"
+                    required
+                    className="w-full text-sm border-b border-gray-300 focus:border-green-500 px-2 py-3 outline-none"
+                    placeholder="Enter password"
+                />
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
+                <div className="flex items-center">
+                  <input
+                      id="remember-me"
+                      name="remember-me"
+                      type="checkbox"
+                      className="h-4 w-4 text-green-500 border-gray-300 rounded"
+                  />
+                  <label
+                      htmlFor="remember-me"
+                      className="text-gray-800 ml-3 text-sm"
+                  >
+                    Remember me
+                  </label>
+                </div>
+                <a
+                    href="#"
+                    className="text-green-500 font-semibold text-sm hover:underline"
+                >
+                  Forgot Password?
+                </a>
+              </div>
+              <div className="mt-12">
+                <button
+                    type="submit"
+                    className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-md text-white bg-green-500 hover:bg-green-600"
+                >
+                  Sign in
+                </button>
+                <p className="text-gray-800 text-sm text-center mt-6">
+                  Don't have an account?
+                  <Link
+                      to="/signup"
+                      className="text-green-500 font-semibold hover:underline ml-1"
+                  >
+                    Register here
+                  </Link>
+                </p>
               </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
-    </div>
   );
-}
+};
+
+export default Login;

@@ -8,8 +8,8 @@ import AddProduct from "@/pages/dashboard/AddProduct";
 import AdminAllProduct from "@/pages/dashboard/AdminAllProduct";
 import Dashboard from "@/pages/dashboard/Dashboard";
 import UpdateProductForm from "@/pages/dashboard/UpdateProductForm";
-import { LoginForm } from "@/pages/Login";
-import { SignUp } from "@/pages/SignUp";
+import Login from "@/pages/Login";
+import Register from "@/pages/SignUp";
 import { createBrowserRouter } from "react-router-dom";
 import Alluser from "@/pages/dashboard/AllUser.tsx";
 import Allorder from "@/pages/dashboard/Allorder.tsx";
@@ -57,10 +57,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginForm />,
+    element: <Login />,
   },
   {
     path: "/signup",
-    element: <SignUp />,
+    element: <Register />,
   },
 ]);
