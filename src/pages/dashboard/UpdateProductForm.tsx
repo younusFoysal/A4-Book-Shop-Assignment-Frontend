@@ -1,61 +1,54 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  useGetSingleProductQuery,
-  useUpdateProductMutation,
-} from "@/redux/features/product/productApi";
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useGetSingleProductQuery, useUpdateProductMutation } from "@/redux/features/product/productApi";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { X } from "lucide-react";
 
-const UpdateProductForm: React.FC = () => {
+const UpdateProductForm = () => {
   const { productId } = useParams<{ productId: string }>();
-  const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState<File | null>(null);
-  const [rating, setRating] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState(0);
-  const [available, setAvailable] = useState(true);
+  const [updateProduct] = useUpdateProductMutation();
+  const { data: productData, isLoading: isFetching } = useGetSingleProductQuery(productId as string);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    data: productData,
-    isLoading: isFetching,
-    refetch,
-  } = useGetSingleProductQuery(productId as string);
-  const [updateProduct] = useUpdateProductMutation();
+  const [formData, setFormData] = useState({
+    title: "",
+    author: "",
+    price: 0,
+    category: "",
+    description: "",
+    image: null as File | null,
+    rating: 0,
+    quantity: 0,
+    inStock: true
+  });
 
   useEffect(() => {
-    if (productData) {
-      setName(productData.data.name);
-      setBrand(productData.data.brand);
-      setModel(productData.data.model);
-      setDescription(productData.data.description);
-      setImage(null);
-      setRating(productData.data.rating);
-      setQuantity(productData.data.quantity);
-      setCategory(productData.data.category);
-      setPrice(productData.data.price);
-      setAvailable(productData.data.available);
+    if (productData?.data) {
+      setFormData({
+        ...productData.data,
+        image: null
+      });
     }
   }, [productData]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("image", file);
-
     const response = await fetch(
-      "https://api.imgbb.com/1/upload?key=05fe858dfb3c3d87e4d12bcbc8847b36",
-      {
-        method: "POST",
-        body: formData,
-      }
+        "https://api.imgbb.com/1/upload?key=05fe858dfb3c3d87e4d12bcbc8847b36",
+        {
+          method: "POST",
+          body: formData,
+        }
     );
-
     const data = await response.json();
     return data.data.url;
   };
@@ -63,177 +56,192 @@ const UpdateProductForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      // If a new image is uploaded, get the new URL, otherwise use existing one
       let imageUrl = productData?.data.image || "";
-      if (image) {
-        imageUrl = await handleImageUpload(image);
+      if (formData.image) {
+        imageUrl = await handleImageUpload(formData.image);
       }
 
-      const updatedProduct = {
-        name,
-        brand,
-        model,
-        description,
-        image: imageUrl, // Use the determined image URL
-        rating,
-        quantity,
-        category,
-        price,
-        available,
+      const updatedData = {
+        ...formData,
+        image: imageUrl,
+        price: Number(formData.price),
+        rating: Number(formData.rating),
+        quantity: Number(formData.quantity)
       };
 
       await updateProduct({
         productId: productId as string,
-        updatedProduct,
-      });
+        updatedProduct: updatedData
+      }).unwrap();
 
-      toast.success("Product updated successfully!");
-      refetch();
+      toast.success("Book updated successfully!");
     } catch (error) {
-      console.error("Failed to update product:", error);
-      toast.error("Failed to update product.");
+      toast.error("Failed to update book");
     } finally {
       setIsLoading(false);
     }
   };
+
   if (isFetching) {
-    return <div>Loading...</div>;
+    return (
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#04345c]"></div>
+        </div>
+    );
   }
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg"
-      >
-        <h2 className="text-2xl font-bold mb-6">Update Product</h2>
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Brand
-            </label>
-            <input
-              type="text"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              required
-            />
-          </div>
+      <div className="bg-white border rounded-lg drop-shadow-lg relative ">
+        <div className="flex items-start justify-between p-5 border-b rounded-t">
+          <h3 className="text-xl font-semibold">Update Book</h3>
+          <button className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+            <X className="w-5 h-5" />
+          </button>
         </div>
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Model
-            </label>
-            <input
-              type="text"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Rating
-            </label>
-            <input
-              type="number"
-              value={rating}
-              onChange={(e) => setRating(Number(e.target.value))}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              min="0"
-              max="5"
-              required
-            />
-          </div>
+
+        <div className="p-6 space-y-6">
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-6 gap-6">
+              <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Book Title</label>
+                <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    required
+                />
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Author</label>
+                <input
+                    type="text"
+                    name="author"
+                    value={formData.author}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    required
+                />
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Category</label>
+                <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Fiction">Fiction</option>
+                  <option value="NonFiction">Non Fiction</option>
+                  <option value="SelfDevelopment">Self Development</option>
+                  <option value="Business">Business</option>
+                  <option value="Technology">Technology</option>
+                </select>
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Price</label>
+                <input
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    min="0"
+                    step="0.01"
+                    required
+                />
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Rating</label>
+                <input
+                    type="number"
+                    name="rating"
+                    value={formData.rating}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    required
+                />
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Quantity</label>
+                <input
+                    type="number"
+                    name="quantity"
+                    value={formData.quantity}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    min="0"
+                    required
+                />
+              </div>
+
+              <div className="col-span-full">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Description</label>
+                <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows={6}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    required
+                />
+              </div>
+
+              <div className="col-span-full">
+                <label className="text-sm font-medium text-gray-900 block mb-2">Book Cover Image</label>
+                <input
+                    type="file"
+                    onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.files?.[0] || null }))}
+                    className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
+                    accept="image/*"
+                />
+                {productData?.data.image && (
+                    <img
+                        src={productData.data.image}
+                        alt="Current Product"
+                        className="mt-2 h-32 w-32 object-cover rounded-md"
+                    />
+                )}
+              </div>
+
+              <div className="col-span-full">
+                <label className="inline-flex items-center">
+                  <input
+                      type="checkbox"
+                      name="inStock"
+                      checked={formData.inStock}
+                      onChange={(e) => setFormData(prev => ({ ...prev, inStock: e.target.checked }))}
+                      className="rounded border-gray-300 text-[#04345c] shadow-sm focus:border-[#04345c] focus:ring focus:ring-[#04345c]/20 focus:ring-opacity-50"
+                  />
+                  <span className="ml-2 text-sm text-gray-900">In Stock</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-200 rounded-b mt-6">
+              <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full px-8 py-3 text-base font-bold text-white bg-[#04345c] rounded-3xl hover:bg-[#048ed6] transition-all duration-200 disabled:opacity-50"
+              >
+                {isLoading ? "Updating Book..." : "Update Book"}
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Price
-            </label>
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              min="0"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Availability
-            </label>
-            <select
-              value={available ? "true" : "false"}
-              onChange={(e) => setAvailable(e.target.value === "true")}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              required
-            >
-              <option value="true">Available</option>
-              <option value="false">Out of Stock</option>
-            </select>
-          </div>
-        </div>
-        <div className="mb-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Image
-            </label>
-            <input
-              type="file"
-              onChange={(e) =>
-                setImage(e.target.files ? e.target.files[0] : null)
-              }
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            />
-            {/* Display current image */}
-            {productData?.data.image && (
-              <img
-                src={productData.data.image}
-                alt="Current Product"
-                className="mt-2 h-32 w-32 object-cover rounded-md shadow-md"
-              />
-            )}
-          </div>
-        </div>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-        >
-          {isLoading ? "Updating..." : "Update Product"}
-        </button>
-      </form>
-    </div>
+      </div>
   );
 };
 

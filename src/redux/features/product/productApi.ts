@@ -1,25 +1,25 @@
 import { baseApi } from "@/redux/api/baseApi";
 export interface Product {
   _id: string;
-  name: string;
-  brand: string;
-  model: string;
+  title: string;
+  author: string;
+  price: number;
+  category: "Fiction" | "Science" | "SelfDevelopment" | "Poetry" | "Religious";
   description: string;
   image: string;
   rating: number;
   quantity: number;
-  category: string;
-  price: number;
-  available: boolean;
+  inStock: boolean;
 }
 
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllProducts: builder.query<Product[], string>({
-      query: (category) => ({
-        url: category ? `/allproducts?category=${category}` : `/allproducts`,
+    getAllProducts: builder.query({
+      query: (queryString) => ({
+        url: `/allproducts${queryString}`,
         method: "GET",
       }),
+      providesTags: ["Products"],
     }),
     addProduct: builder.mutation<Product, Partial<Product>>({
       query: (newProduct) => ({

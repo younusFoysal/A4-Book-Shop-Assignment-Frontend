@@ -1,10 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import UseUser from "@/hook/UseUser.tsx";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const user = UseUser()
 
   return (
       <header className="fixed top-0 w-full bg-white z-50 shadow-sm">
@@ -32,18 +34,30 @@ export default function Navbar() {
               <Link to="/about" className="hover:text-[#04345c]">About</Link>
               <Link to="/services" className="hover:text-[#04345c]">Services</Link>
               <Link to="/testimonial" className="hover:text-[#04345c]">Testimonial</Link>
-              <div className="flex items-center justify-end gap-2">
-                <button
-                    onClick={() => navigate('/signup')}
-                    className="py-2 px-6 bg-white border border-[#04345c] text-[#04345c] text-center hover:text-white rounded-3xl font-semibold hover:bg-[#032a49] transition-colors duration-500">
-                  Sign Up
-                </button>
-                <button
-                    onClick={() => navigate('/login')}
-                    className="py-2 px-6 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-3xl font-semibold transition-colors duration-500">
-                  Sign In
-                </button>
-              </div>
+              {
+                user ?
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                          onClick={() => navigate('/dashboard')}
+                          className="py-2 px-6 bg-white border border-[#04345c] text-[#04345c] text-center hover:text-white rounded-3xl font-semibold hover:bg-[#032a49] transition-colors duration-500">
+                        Dashboard
+                      </button>
+                    </div>
+                    :
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                          onClick={() => navigate('/signup')}
+                          className="py-2 px-6 bg-white border border-[#04345c] text-[#04345c] text-center hover:text-white rounded-3xl font-semibold hover:bg-[#032a49] transition-colors duration-500">
+                        Sign Up
+                      </button>
+                      <button
+                          onClick={() => navigate('/login')}
+                          className="py-2 px-6 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-3xl font-semibold transition-colors duration-500">
+                        Sign In
+                      </button>
+                    </div>
+              }
+
 
             </nav>
 
@@ -58,9 +72,21 @@ export default function Navbar() {
                 <Link to="/about" className="hover:text-[#04345c] transition-colors duration-300">About</Link>
                 <Link to="/services" className="hover:text-[#04345c] transition-colors duration-300">Services</Link>
                 <Link to="/testimonial" className="hover:text-[#04345c] transition-colors duration-300">Testimonial</Link>
-                <button className="py-2 px-6 bg-[#04345c] text-white rounded-lg font-semibold hover:bg-[#032a49] transition-colors duration-300">
-                  Sign In
-                </button>
+                {
+                  user ?
+                      <button
+                          onClick={() => navigate('/dashboard')}
+                          className="py-2 px-6 bg-[#04345c] text-white rounded-lg font-semibold hover:bg-[#032a49] transition-colors duration-300">
+                        Dashboard
+                      </button>
+                      :
+                      <button
+                          onClick={() => navigate('/login')}
+                          className="py-2 px-6 bg-[#04345c] text-white rounded-lg font-semibold hover:bg-[#032a49] transition-colors duration-300">
+                        Sign In
+                      </button>
+                }
+
               </div>
             </nav>
           </div>

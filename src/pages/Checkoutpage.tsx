@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { BookOpen, CreditCard, Package, ShoppingBag } from 'lucide-react';
 import axios from "axios";
+import {toast} from "sonner";
 
 const stripePromise = loadStripe("pk_test_51M1YVBL6YvgZDvxuWiJT39NxnF7fG3kDudsD3gOxgUw6WmJusFHhvT4RHti88caAiBMIvOqptpW3smjH3c1mPlZ600PtOgXZj6");
 
@@ -20,6 +21,8 @@ const CheckoutPage: React.FC = () => {
 
   const stripe = useStripe();
   const elements = useElements();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (product) {
@@ -80,7 +83,9 @@ const CheckoutPage: React.FC = () => {
 
       try {
         await axios.post("http://localhost:5000/api/orders", orderData);
-        alert("Order placed successfully!");
+        toast.success("Order placed successfully!");
+        navigate("/");
+        // alert("Order placed successfully!");
       } catch (err) {
         console.error("Order saving failed:", err);
         alert("Order could not be saved. Please try again.");

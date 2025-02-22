@@ -42,7 +42,7 @@ const SingleProduct: React.FC = () => {
             <img
                 src={product.image}
                 alt={product.title}
-                className="w-full max-w-[500px] h-auto object-cover rounded-3xl shadow-xl"
+                className="w-full max-w-[500px] max-h-[600px] object-cover rounded-3xl shadow-xl"
             />
             <div className="mt-8 flex items-center gap-4">
               <div className="flex items-center gap-2">
