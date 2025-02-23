@@ -6,13 +6,14 @@ interface TUser {
     password: string;
     role: "admin" | "user";
     isBlocked: boolean;
+    id: string;
 }
 
 const UserApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAlluser: builder.query<TUser[], string>({
-            query: () => ({
-                url: "/users",
+        getAlluser: builder.query({
+            query: (queryString) => ({
+                url: `/users${queryString}`,
                 method: "GET",
             }),
         }),
@@ -28,10 +29,16 @@ const UserApi = baseApi.injectEndpoints({
         >({
             query: ({ userId, updateduser }) => ({
                 url: `/user/${userId}`,
-                method: "PUT",
+                method: "PATCH",
                 body: updateduser,
             }),
         }),
+        getUser: builder.query<TUser, string>({
+            query: (userId) => ({
+                url: `/user/${userId}`,
+                method: "GET",
+            }),
+        })
     }),
 
     overrideExisting: false,
@@ -41,4 +48,5 @@ export const {
     useGetAlluserQuery,
     useUpdateuserMutation,
     useDeleteUserMutation,
+    useGetUserQuery,
 } = UserApi;

@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const user = UseUser()
+  console.log(user)
 
   return (
       <header className="fixed top-0 w-full bg-white z-50 shadow-sm">
@@ -30,7 +31,7 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-10">
               <Link to="/" className="hover:text-[#04345c]">Home</Link>
-              <Link to="/work" className="hover:text-[#04345c]">Work</Link>
+              <Link to="/allProducts" className="hover:text-[#04345c]">All Books</Link>
               <Link to="/about" className="hover:text-[#04345c]">About</Link>
               <Link to="/services" className="hover:text-[#04345c]">Services</Link>
               <Link to="/testimonial" className="hover:text-[#04345c]">Testimonial</Link>

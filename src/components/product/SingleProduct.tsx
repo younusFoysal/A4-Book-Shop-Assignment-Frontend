@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
-import { Star, BookOpen, Calendar, Tag, Award, Package, Clock, BookmarkCheck } from 'lucide-react';
+import {Star, BookOpen, Calendar, Tag, Award, Package, Clock, BookmarkCheck, BookmarkX} from 'lucide-react';
 
 const SingleProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,7 +42,7 @@ const SingleProduct: React.FC = () => {
             <img
                 src={product.image}
                 alt={product.title}
-                className="w-full max-w-[500px] max-h-[600px] object-cover rounded-3xl shadow-xl"
+                className="w-full max-w-[500px] h-full max-h-[600px] object-cover rounded-3xl shadow-xl"
             />
             <div className="mt-8 flex items-center gap-4">
               <div className="flex items-center gap-2">
@@ -75,7 +75,11 @@ const SingleProduct: React.FC = () => {
               <span className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
                   product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
               }`}>
-              <BookmarkCheck size={16}/>
+                {
+                  product.inStock ?
+                      <BookmarkCheck size={16}/> :
+                      <BookmarkX size={16}/>
+                }
                 {product.inStock ? 'In Stock' : 'Out of Stock'}
             </span>
             </div>
@@ -120,7 +124,7 @@ const SingleProduct: React.FC = () => {
             <div className="mt-10 flex gap-4">
               <button
                   onClick={handleBuyNow}
-                  className="flex-1 bg-[#04345c] text-white py-4 px-8 rounded-full text-lg font-semibold hover:bg-[#048ed6] transition-colors duration-300 flex items-center justify-center gap-2"
+                  className="flex-1 e py-4 px-8 rounded-full text-lg  flex items-center justify-center gap-2 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c]  font-semibold transition-colors duration-500  drop-shadow-lg disabled:opacity-50"
                   disabled={!product.inStock}
               >
                 <BookmarkCheck size={20}/>

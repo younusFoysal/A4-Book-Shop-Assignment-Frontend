@@ -17,9 +17,9 @@ interface TOrderData {
 
 const orderApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAllOrder: builder.query<TOrderData[], string>({
-            query: () => ({
-                url: "/orders",
+        getAllOrder: builder.query({
+            query: (queryString) => ({
+                url: `/orders${queryString}`,
                 method: "GET",
             }),
         }),
@@ -28,14 +28,14 @@ const orderApi = baseApi.injectEndpoints({
             { productId: string; updatedProduct: Partial<TOrderData> }
         >({
             query: ({ productId, updatedProduct }) => ({
-                url: `/order/${productId}`,
-                method: "PUT",
+                url: `/orders/${productId}`,
+                method: "PATCH",
                 body: updatedProduct,
             }),
         }),
         deleteOrder: builder.mutation<{ message: string }, string>({
             query: (orderId) => ({
-                url: `/order/${orderId}`,
+                url: `/orders/${orderId}`,
                 method: "DELETE",
             }),
         }),

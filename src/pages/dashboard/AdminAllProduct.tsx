@@ -54,7 +54,7 @@ const AdminAllProduct = () => {
                         to="/dashboard/add-product"
                         className="px-6 py-2 bg-[#04345c] text-white rounded-3xl hover:bg-[#048ed6] transition-all duration-200"
                     >
-                        Add New Book
+                        Add Book
                     </Link>
                 </div>
             </div>
@@ -139,7 +139,7 @@ const AdminAllProduct = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {products.map((book) => (
                         <div key={book._id}
-                             className="bg-white rounded-3xl shadow-md overflow-hidden border border-gray-200">
+                             className="bg-white rounded-3xl drop-shadow-lg hover:drop-shadow-2xl overflow-hidden ">
                             <div className="relative h-48 overflow-hidden">
                                 <img
                                     src={book.image}

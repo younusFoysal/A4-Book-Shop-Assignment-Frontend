@@ -33,9 +33,11 @@ const FeaturedProduct: React.FC = () => {
 
 
       </div>
-      <div className="flex items-center justify-center mt-8">
+      <div className="flex items-center justify-center mt-16 mb-8">
         <Link to="/allProducts">
-          <button className="bg-primary-jext px-4 py-3 rounded-md text-white">
+          <button
+              className="w-full py-4 px-8 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-full font-semibold transition-colors duration-500 text-base drop-shadow-lg disabled:opacity-50"
+          >
             View All Products
           </button>
         </Link>

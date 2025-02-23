@@ -6,6 +6,9 @@ export type TUser = {
   role: string;
   iat: number;
   exp: number;
+  email: string;
+  name: string;
+  id: string;
 };
 
 type TAuthState = {

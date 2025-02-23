@@ -6,6 +6,7 @@ import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { BookOpen, CreditCard, Package, ShoppingBag } from 'lucide-react';
 import axios from "axios";
 import {toast} from "sonner";
+import UseUser from "@/hook/UseUser.tsx";
 
 const stripePromise = loadStripe("pk_test_51M1YVBL6YvgZDvxuWiJT39NxnF7fG3kDudsD3gOxgUw6WmJusFHhvT4RHti88caAiBMIvOqptpW3smjH3c1mPlZ600PtOgXZj6");
 
@@ -23,6 +24,7 @@ const CheckoutPage: React.FC = () => {
   const elements = useElements();
 
   const navigate = useNavigate();
+  const user = UseUser()
 
   useEffect(() => {
     if (product) {
@@ -58,7 +60,7 @@ const CheckoutPage: React.FC = () => {
       payment_method: {
         card: cardElement!,
         billing_details: {
-          name: "Customer Name",
+          name: user?.name,
         },
       },
     });
@@ -74,8 +76,8 @@ const CheckoutPage: React.FC = () => {
         quantity,
         totalPrice,
         user: {
-          name: "Customer Name",
-          email: "customer@example.com",
+          name: user?.name,
+          email: user?.email,
         },
         paymentStatus: "pending",
         paymentId: paymentIntent.id,
@@ -173,7 +175,7 @@ const CheckoutPage: React.FC = () => {
 
               <button
                   type="submit"
-                  className="w-full bg-[#04345c] text-white py-3 px-6 rounded-2xl text-lg font-semibold hover:bg-[#048ed6] transition-colors duration-300 flex items-center justify-center gap-2"
+                  className="w-full  py-3 px-6 rounded-2xl text-lg font-semibold  flex items-center justify-center gap-2 bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c]   transition-colors duration-500  drop-shadow-lg disabled:opacity-50"
                   disabled={!stripe || !clientSecret}
               >
                 <ShoppingBag size={20} />

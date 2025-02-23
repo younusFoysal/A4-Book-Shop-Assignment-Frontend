@@ -1,189 +1,142 @@
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import { Search, Star, SlidersHorizontal } from "lucide-react";
 import React, { useState } from "react";
-
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import ProductCard from "@/components/home/ProductCard.tsx";
 
-const AllProductsPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
-  const [selectedAvailability, setSelectedAvailability] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 100000]);
+const AllProductsPage = () => {
+    const [showFilters, setShowFilters] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedAvailability, setSelectedAvailability] = useState("");
+    const [priceRange, setPriceRange] = useState([0, 100]);
+    const [ratingFilter, setRatingFilter] = useState(0);
+    const [sortOrder, setSortOrder] = useState("desc");
 
-  const {
-    data: productsResponse,
-    isLoading,
-    isError,
-  } = useGetAllProductsQuery("");
+    const { data: productsResponse, isLoading } = useGetAllProductsQuery(
+        `?search=${searchTerm}&category=${selectedCategory}&sortBy=${sortOrder}&inStock=${selectedAvailability}&minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}&rating=${ratingFilter}`
+    );
+    console.log([productsResponse, isLoading]);
 
-  const products = productsResponse?.data || [];
-
-  // Filtering logic
-  const filteredProducts = products.filter((product) => {
-    const matchesSearchTerm =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCategory =
-      selectedCategory === "" || product.category === selectedCategory;
-
-    const matchesBrand =
-      selectedBrand === "" || product.brand === selectedBrand;
-
-    const matchesModel =
-      selectedModel === "" || product.model === selectedModel;
-
-    const matchesAvailability =
-      selectedAvailability === "" ||
-      (selectedAvailability === "available" && product.available) ||
-      (selectedAvailability === "unavailable" && !product.available);
-
-    const matchesPrice =
-      product.price >= priceRange[0] && product.price <= priceRange[1];
+    const products = productsResponse?.data || [];
+    const categories = ["Fiction", "Science", "SelfDevelopment", "Poetry", "Religious"];
 
     return (
-      matchesSearchTerm &&
-      matchesCategory &&
-      matchesBrand &&
-      matchesModel &&
-      matchesAvailability &&
-      matchesPrice
-    );
-  });
-
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <h1>Loading.........</h1>
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className="text-center text-red-500">Error fetching products</div>
-    );
-
-  // Get unique filter options from products
-  const uniqueCategories = [
-    ...new Set(products.map((product) => product.category)),
-  ];
-  const uniqueBrands = [...new Set(products.map((product) => product.brand))];
-  const uniqueModels = [...new Set(products.map((product) => product.model))];
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">All Products</h1>
-
-      {/* Search and Filters */}
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="text"
-          placeholder="Search by name, brand, or category"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-jext"
-        />
-
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-jext"
-        >
-          <option value="">All Categories</option>
-          {uniqueCategories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={selectedBrand}
-          onChange={(e) => setSelectedBrand(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-jext"
-        >
-          <option value="">All Brands</option>
-          {uniqueBrands.map((brand) => (
-            <option key={brand} value={brand}>
-              {brand}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={selectedModel}
-          onChange={(e) => setSelectedModel(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-jext"
-        >
-          <option value="">All Models</option>
-          {uniqueModels.map((model) => (
-            <option key={model} value={model}>
-              {model}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={selectedAvailability}
-          onChange={(e) => setSelectedAvailability(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-jext"
-        >
-          <option value="">All Availability</option>
-          <option value="available">In Stock</option>
-          <option value="unavailable">Out of Stock</option>
-        </select>
-      </div>
-
-      {/* Product Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
-          <div
-            key={product._id}
-            className="border border-gray-100 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-          >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-[200px] object-cover rounded-t-2xl"
-            />
-
-            <div className="p-4">
-              <h3 className="text-2xl capitalize font-bold">{product.brand}</h3>
-              <p className="text-gray-600 text-lg">{product.name}</p>
-
-              <div className="flex justify-between items-center mt-4">
-                <p className="text-gray-500">Model: {product.model}</p>
-                <p className="text-xl font-bold text-primary-jext">
-                  ${product.price.toLocaleString()}
-                </p>
-              </div>
-
-              <div className="flex justify-between items-center mt-2">
-                <p className="text-gray-500 capitalize">{product.category}</p>
-                <p
-                  className={`text-sm font-semibold ${
-                    product.available ? "text-green-600" : "text-red-600"
-                  }`}
+        <div className="container mx-auto px-4 py-8">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-[#04345c]">Browse All Books</h1>
+                <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2 px-4 py-2  bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-3xl font-semibold transition-colors duration-500 text-base drop-shadow-lg  disabled:opacity-50"
                 >
-                  {product.available ? "In Stock" : "Out of Stock"}
-                </p>
-              </div>
-
-              <div className="mt-6">
-                <Link to={`/products/${product._id}`}>
-                  <button className="w-full bg-primary-jext text-white py-2 px-4 rounded-lg hover:bg-primary-hover transition-colors duration-300">
-                    View Details
-                  </button>
-                </Link>
-              </div>
+                    <SlidersHorizontal size={20} />
+                    <span>Filters</span>
+                </button>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+
+            <div className="mb-8">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                        type="text"
+                        placeholder="Search books by title, author, or category..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-full px-4 py-3 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none"
+                    />
+                </div>
+            </div>
+
+
+
+                <div
+                    className={`mb-8 bg-white rounded-2xl shadow-lg border transform transition-all duration-500 ease-in-out origin-top
+    ${showFilters ? 'opacity-100 max-h-[1000px] p-6' : 'opacity-0 max-h-0 p-0 overflow-hidden'}
+  `}
+                >
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c]"
+                            >
+                                <option value="">All Categories</option>
+                                {categories.map(category => (
+                                    <option key={category} value={category}>{category}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Availability</label>
+                            <select
+                                value={selectedAvailability}
+                                onChange={(e) => setSelectedAvailability(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c]"
+                            >
+                                <option value="">All</option>
+                                <option value="true">In Stock</option>
+                                <option value="false">Out of Stock</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Rating</label>
+                            <div className="flex items-center gap-2">
+                                {[1, 2, 3, 4, 5].map((rating) => (
+                                    <button
+                                        key={rating}
+                                        onClick={() => setRatingFilter(rating)}
+                                        className={`p-2 rounded-lg ${ratingFilter === rating ? 'bg-[#04345c] text-white' : 'bg-gray-100'}`}
+                                    >
+                                        <Star
+                                            className={`w-4 h-4 ${ratingFilter === rating ? 'fill-white' : 'fill-yellow-400'}`}/>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                            <select
+                                value={sortOrder}
+                                onChange={(e) => setSortOrder(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c]"
+                            >
+                                <option value="desc">Newest First</option>
+                                <option value="asc">Oldest First</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
+                                <option value="rating_desc">Highest Rated</option>
+                            </select>
+                        </div>
+
+                        <div className="col-span-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Price Range: ${priceRange[0]} - ${priceRange[1]}
+                            </label>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={priceRange[1]}
+                                onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {products.slice(0, 16).map((product) => (<ProductCard key={product._id} product={product} />))}
+
+            </div>
+        </div>
+    );
 };
 
 export default AllProductsPage;

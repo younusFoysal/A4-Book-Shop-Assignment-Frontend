@@ -13,6 +13,7 @@ import Register from "@/pages/SignUp";
 import { createBrowserRouter } from "react-router-dom";
 import Alluser from "@/pages/dashboard/AllUser.tsx";
 import Allorder from "@/pages/dashboard/Allorder.tsx";
+import Profile from "@/pages/dashboard/Profile.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "add-product",
         element: <AddProduct />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
       {
         path: "update-product/:productId",
