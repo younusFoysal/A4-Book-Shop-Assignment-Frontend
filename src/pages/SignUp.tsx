@@ -1,157 +1,170 @@
-/* eslint-disable no-empty-pattern */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useActionState } from "react";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 import { toast } from "sonner";
+import { Loader, Mail, Lock, Eye, EyeOff, UserPlus, User, ArrowLeft } from "lucide-react";
+import UseUser from "@/hook/UseUser";
+import { useState } from "react";
 
-const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    acceptTerms: false,
-  });
+const SignUp = () => {
+  const [register, ] = useRegisterMutation();
+  const user = UseUser();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
 
-  const navigate = useNavigate();
-  const [registerUser, { isLoading }] = useRegisterMutation();
 
-  const handleChange = (e: any) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
+  const [state, formAction] = useActionState(
+      async (_prevState: any, formData: FormData) => {
+        try {
+          setIsLoading(true)
+          const userdata = Object.fromEntries(formData.entries());
+          await register(userdata).unwrap();
+          setIsLoading(false)
+          toast.success("Registration successful! Please login.", {
+            icon: "🎉",
+          });
+          navigate("/login")
+        } catch (error: any) {
+          setIsLoading(true)
+          toast.error(error?.message || "Registration failed", {
+            icon: "❌",
+          });
+        }
+      },
+      null
+  );
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.password) {
-      toast.error("All fields are required!");
-      return;
-    }
-    if (!formData.acceptTerms) {
-      toast.error("You must accept the Terms and Conditions!");
-      return;
-    }
-
-    try {
-      const response = await registerUser(formData).unwrap();
-      console.log(response);
-      if (response.statusCode === 201) {
-        toast.success("Registration successful!");
-        navigate("/login");
-      }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Registration failed!");
-    }
-  };
+  if (user) return <Navigate to="/" />;
 
   return (
-      <div className="font-[sans-serif] bg-white md:h-screen">
-        <div className="grid md:grid-cols-2 items-center gap-8 h-full">
-          <div className="max-md:order-1 p-4">
-            <img
-                src="https://readymadeui.com/signin-image.webp"
-                className="lg:max-w-[85%] w-full h-full aspect-square object-contain block mx-auto"
-                alt="login-image"
-            />
+      <div className="justify-center py-12 px-4 sm:px-6 lg:px-8  w-full min-h-screen flex items-center bg-[#010e28] bg-[linear-gradient(to_bottom,_#082740_1px,_transparent_1px),_linear-gradient(to_right,_#082740_1px,_transparent_1px)] [background-size:30px_30px] bg-center overflow-x-hidden animate-bgmove">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            {/*<UserPlus className="mx-auto h-12 w-12 text-[#04345c]" />*/}
+            <h2 className="mt-6 text-5xl font-extrabold text-white uppercase">
+              Create Account
+            </h2>
+            <p className="mt-2 text-sm text-white/90">
+              Join us and start your journey
+            </p>
           </div>
-
-          <div className="flex items-center md:p-8 p-6 bg-[#154d22] h-full lg:w-11/12 lg:ml-auto">
-            <form className="max-w-lg w-full mx-auto" onSubmit={handleSubmit}>
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold text-white">
-                  Create an account
-                </h3>
+          <form className="mt-8 space-y-6" action={formAction} onSubmit={() => setIsLoading(true)}>
+            <div className="rounded-3xl shadow-lg bg-white p-8 space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-[#04345c] mb-1">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      className="appearance-none rounded-xl relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-[#04345c] focus:border-[#04345c] focus:z-10 sm:text-sm transition-all duration-200"
+                      placeholder="Enter your full name"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="text-white text-xs block mb-2">Full Name</label>
-                <input
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full bg-transparent text-sm text-white border-b border-gray-300 focus:white pl-2 pr-8 py-3 outline-none"
-                    placeholder="Enter name"
-                />
+                <label htmlFor="email" className="block text-sm font-medium text-[#04345c] mb-1">
+                  Email address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      className="appearance-none rounded-xl relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-[#04345c] focus:border-[#04345c] focus:z-10 sm:text-sm transition-all duration-200"
+                      placeholder="Enter your email"
+                  />
+                </div>
               </div>
 
-              <div className="mt-8">
-                <label className="text-white text-xs block mb-2">Email</label>
-                <input
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full bg-transparent text-sm text-white border-b border-gray-300 focus:white pl-2 pr-8 py-3 outline-none"
-                    placeholder="Enter email"
-                />
-              </div>
-
-              <div className="mt-8">
-                <label className="text-white text-xs block mb-2">Password</label>
-                <input
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="w-full bg-transparent text-sm text-white border-b border-gray-300 focus:white pl-2 pr-8 py-3 outline-none"
-                    placeholder="Enter password"
-                />
-              </div>
-
-              <div className="flex items-center mt-8">
-                <input
-                    id="acceptTerms"
-                    name="acceptTerms"
-                    type="checkbox"
-                    checked={formData.acceptTerms}
-                    onChange={handleChange}
-                    className="h-4 w-4 shrink-0 rounded"
-                />
-                <label
-                    htmlFor="acceptTerms"
-                    className="text-white ml-3 block text-sm"
-                >
-                  I accept the{" "}
-                  <a
-                      href="#"
-                      className="text-white/80 font-semibold hover:underline ml-1"
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-[#04345c] mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      className="appearance-none rounded-xl relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-[#04345c] focus:border-[#04345c] focus:z-10 sm:text-sm transition-all duration-200"
+                      placeholder="Create a password"
+                  />
+                  <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   >
-                    Terms and Conditions
-                  </a>
+                    {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                        <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    required
+                    defaultChecked
+                    className="h-4 w-4 text-[#04345c] focus:ring-[#04345c] border-gray-300 rounded transition-all duration-200"
+                />
+                <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
+                  I agree to the Terms and Privacy Policy
                 </label>
               </div>
 
-              <div className="mt-8">
+              <div>
                 <button
                     type="submit"
-                    className="w-max shadow-xl py-3 px-6 text-sm text-white font-semibold rounded bg-green-500 hover:bg-green-600 focus:outline-none"
                     disabled={isLoading}
+                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-[#04345c] hover:bg-[#048ed6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#04345c] transition-all duration-200"
                 >
-                  {isLoading ? "Registering..." : "Register"}
+                  {isLoading ? (
+                      <Loader className="animate-spin h-5 w-5" />
+                  ) : (
+                      <div className="flex items-center">
+                        <UserPlus className="h-5 w-5 mr-2" />
+                        Create Account
+                      </div>
+                  )}
                 </button>
-                <p className="text-sm text-white mt-8">
-                  Already have an account?{" "}
-                  <Link
-                      to="/login"
-                      className="text-white font-semibold hover:underline ml-1"
-                  >
-                    Login here
-                  </Link>
-                </p>
               </div>
-            </form>
-          </div>
+            </div>
+
+            <p className="flex justify-center items-center gap-2 text-center text-sm text-white/80">
+              Already have an account?{" "}
+              <Link
+                  to="/login"
+                  className="font-medium text-white hover:text-[#048ed6] inline-flex items-center transition-all duration-200"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back to login
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
   );
 };
 
-export default Register;
+export default SignUp;

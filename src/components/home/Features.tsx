@@ -60,12 +60,25 @@ const Features = () => {
                         </div>
                     </div>
                 </main>
-                <div className="rotate-180">
-                    <svg viewBox="0 0 1925 375" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd"
-                              d="M0.0021713 0L0.000976562 375.003L1925 0H0.0021713Z"
-                              fill="#04345c"></path>
-                    </svg>
+
+
+                <div className=" bg-white ">
+
+                    <div className="relative w-full bg-[#010e28] overflow-hidden">
+                        <div
+                            className="absolute inset-0 bg-[linear-gradient(to_bottom,_#082740_1px,_transparent_1px),_linear-gradient(to_right,_#082740_1px,_transparent_1px)] [background-size:30px_30px] bg-center animate-bgmove"></div>
+                        <svg className="relative w-full h-auto" viewBox="0 0 1925 375" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M0.0021713 0L0.000976562 375.003L1925 0H0.0021713Z"
+                                fill="#f8f8f8"
+                            ></path>
+                        </svg>
+                    </div>
+
+
                 </div>
             </section>
         </div>

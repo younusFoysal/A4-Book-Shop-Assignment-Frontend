@@ -1,8 +1,9 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { User,  Lock, Camera } from "lucide-react";
 import UseUser from "@/hook/UseUser";
 import {useGetUserQuery, useUpdateuserMutation} from "@/redux/features/users/userApi";
 import { toast } from "sonner";
+import {useChangePasswordMutation, useLoginMutation} from "@/redux/features/auth/authApi.ts";
 
 const Profile = () => {
     const userData = UseUser();
@@ -10,14 +11,27 @@ const Profile = () => {
     const [updateUser] = useUpdateuserMutation();
     const [isEditing, setIsEditing] = useState(false);
 
-    const {  data: userD,  refetch } = useGetUserQuery(userData?.id);
-    console.log(userD?.data);
+    //const [login] = useLoginMutation();
+
+
+    const {  data: userD,  refetch, isLoading } = useGetUserQuery(userData?.id);
+    //console.log(userD?.data);
     const user = userD?.data
+    console.log(user);
 
     const [formData, setFormData] = useState({
-        name: user?.name || "",
-        email: user?.email || "",
+        name: user?.name ,
+        email: user?.email,
     });
+
+    useEffect(() => {
+        if (userD?.data) {
+            setFormData({
+                name: userD.data.name,
+                email: userD.data.email,
+            });
+        }
+    }, [userD]);
 
     const [passwordForm, setPasswordForm] = useState({
         currentPassword: "",
@@ -52,27 +66,64 @@ const Profile = () => {
     };
 
 
+    const [login] = useLoginMutation();
+    const [changePassword] = useChangePasswordMutation();
+
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
-        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-            toast.error("Passwords do not match");
-            return;
-        }
+
         try {
-            await updateUser({
-                userId: userData?.id,
-                updateduser: { password: passwordForm.newPassword },
-            });
+            // Verify current password using login
+            await login({
+                email: userData?.email,
+                password: passwordForm.currentPassword,
+            }).unwrap();
+
+            // Check if new passwords match
+            if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+                toast.error("New passwords do not match");
+                return;
+            }
+
+            // Update password
+            await changePassword({
+                userData: {
+                    email: userData?.email,
+                    userId: userData?.id,
+                    role: userData?.role,
+                },
+                passwordData: {
+                    oldPassword: passwordForm.currentPassword,
+                    newPassword: passwordForm.newPassword,
+                },
+            }).unwrap();
+
             toast.success("Password updated successfully");
             setPasswordForm({
                 currentPassword: "",
                 newPassword: "",
                 confirmPassword: "",
             });
+
         } catch (error) {
-            toast.error("Failed to update password");
+            if (error?.data?.message === "Password do not matched") {
+                toast.error("Current password is incorrect");
+            } else {
+                toast.error(error?.data?.message || "Failed to update password");
+            }
         }
     };
+
+
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#04345c]"></div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="p-6 space-y-6">
@@ -208,6 +259,7 @@ const Profile = () => {
                                         value={passwordForm.currentPassword}
                                         onChange={handlePasswordChange}
                                         className="w-full p-2 border rounded-xl"
+                                        required
                                     />
                                 </div>
                                 <div>
@@ -218,6 +270,7 @@ const Profile = () => {
                                         value={passwordForm.newPassword}
                                         onChange={handlePasswordChange}
                                         className="w-full p-2 border rounded-xl"
+                                        required
                                     />
                                 </div>
                                 <div>
@@ -228,6 +281,7 @@ const Profile = () => {
                                         value={passwordForm.confirmPassword}
                                         onChange={handlePasswordChange}
                                         className="w-full p-2 border rounded-xl"
+                                        required
                                     />
                                 </div>
                                 <button

@@ -17,15 +17,17 @@ const UserApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+
         deleteUser: builder.mutation<{ message: string }, string>({
             query: (userId) => ({
                 url: `/user/${userId}`,
                 method: "DELETE",
             }),
         }),
+
         updateuser: builder.mutation<
             TUser,
-            { userId: string; updateduser: Partial<TUser> }
+            { userId: string; updateduser: Partial<TUser> & { currentPassword?: string; newPassword?: string } }
         >({
             query: ({ userId, updateduser }) => ({
                 url: `/user/${userId}`,
@@ -33,6 +35,7 @@ const UserApi = baseApi.injectEndpoints({
                 body: updateduser,
             }),
         }),
+
         getUser: builder.query<TUser, string>({
             query: (userId) => ({
                 url: `/user/${userId}`,

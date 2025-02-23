@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-      <div className="bg-[#04345c] pt-9">
+      <div className="pt-9  w-full min-h-full flex items-center bg-[#010e28] bg-[linear-gradient(to_bottom,_#082740_1px,_transparent_1px),_linear-gradient(to_right,_#082740_1px,_transparent_1px)] [background-size:30px_30px] bg-center overflow-x-hidden animate-bgmove">
         <div className="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
           <div className="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
             <div className="md:w-[316px]">
