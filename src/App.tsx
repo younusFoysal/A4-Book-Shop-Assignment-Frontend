@@ -6,6 +6,8 @@ import TopSoldBookFeatures from "@/components/home/TopSoldBookFeatures.tsx";
 import WhyUs from "@/components/home/WhyUs.tsx";
 import CTA from "@/components/home/CTA.tsx";
 import TopCategories from "@/components/home/TopCategories.tsx";
+import TopPopularBooks from "@/components/home/TopPopularBooks.tsx";
+import FAQ from "@/components/home/FAQ.tsx";
 
 const App = () => {
   return (
@@ -13,9 +15,11 @@ const App = () => {
       <Hero />
       <FeaturedProduct />
         <WhyUs/>
+        <TopPopularBooks/>
         <TopSoldBookFeatures/>
         <TopCategories/>
         <CTA/>
+        <FAQ/>
 
         <Cookie/>
         <Features/>

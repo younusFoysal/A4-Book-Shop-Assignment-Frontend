@@ -2,7 +2,7 @@ import {BadgePercent, BookCopy, Truck} from "lucide-react";
 
 const TopSoldBookFeatures = () => {
     return (
-        <section className="relative container mx-auto z-10  my-20 pb-10">
+        <section className="relative container mx-auto z-10  my-20 ">
             <div className="w-full overflow-hidden">
                 <div className="relative z-20 flex flex-row w-full lg:w-11/12 mx-auto px-4 lg:!px-0">
                     <div className="w-full md:w-7/12 lg:w-8/12 py-6 md:py-12">
