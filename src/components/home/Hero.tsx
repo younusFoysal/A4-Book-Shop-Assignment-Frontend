@@ -8,7 +8,7 @@ import {toast} from "sonner";
 const Hero = () => {
   const [emailValue, setEmailValue] = useState("");
 
-  const handleGetMail = (e) => {
+  const handleGetMail = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (emailValue){
       if (emailValue.includes("@") && emailValue.includes(".")) {
@@ -38,7 +38,7 @@ const Hero = () => {
 
               <div className="mt-10 lg:mt-14">
                 <p className="text-base font-bold text-[#04345c]">Get your free chapter now</p>
-                <form className="mt-4 lg:mt-5">
+                <form className="mt-4 lg:mt-5" onSubmit={(e) => e.preventDefault()}>
                   <div>
                     <input
                         type="email"
@@ -50,6 +50,7 @@ const Hero = () => {
                   </div>
                   <button
                       onClick={handleGetMail}
+                      type="button"
                       className="w-2/3 mt-3 px-8 py-3 text-base font-semibold  bg-[#04345c]  hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-full  transition-colors duration-500  drop-shadow-lg disabled:opacity-50">
                     Get it now
                   </button>

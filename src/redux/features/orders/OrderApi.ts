@@ -23,6 +23,13 @@ const orderApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        addOrder: builder.mutation<TOrderData, Partial<TOrderData>>({
+            query: (newOrder) => ({
+                url: `/orders`,
+                method: "POST",
+                body: newOrder,
+            }),
+        }),
         updateorder: builder.mutation<
             TOrderData,
             { productId: string; updatedProduct: Partial<TOrderData> }
@@ -48,4 +55,5 @@ export const {
     useDeleteOrderMutation,
     useGetAllOrderQuery,
     useUpdateorderMutation,
+    useAddOrderMutation,
 } = orderApi;

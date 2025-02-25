@@ -34,7 +34,7 @@ export default function Navbar() {
               <Link to="/allProducts" className="hover:text-[#04345c]">All Books</Link>
               <Link to="/about" className="hover:text-[#04345c]">About</Link>
               <Link to="/services" className="hover:text-[#04345c]">Services</Link>
-              <Link to="/testimonial" className="hover:text-[#04345c]">Testimonial</Link>
+              <Link to="/contact" className="hover:text-[#04345c]">Contact Us</Link>
               {
                 user ?
                     <div className="flex items-center justify-end gap-2">
@@ -72,7 +72,7 @@ export default function Navbar() {
                 <Link to="/work" className="hover:text-[#04345c] transition-colors duration-300">Work</Link>
                 <Link to="/about" className="hover:text-[#04345c] transition-colors duration-300">About</Link>
                 <Link to="/services" className="hover:text-[#04345c] transition-colors duration-300">Services</Link>
-                <Link to="/testimonial" className="hover:text-[#04345c] transition-colors duration-300">Testimonial</Link>
+                <Link to="/contact" className="hover:text-[#04345c] transition-colors duration-300">Contact Us</Link>
                 {
                   user ?
                       <button

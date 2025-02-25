@@ -1,7 +1,7 @@
 import { useAddProductMutation } from "@/redux/features/product/productApi";
 import { useState } from "react";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+
 
 const AddProduct = () => {
   const [addProduct] = useAddProductMutation();
@@ -55,11 +55,11 @@ const AddProduct = () => {
         quantity: Number(formData.quantity),
         rating: Number(formData.rating),
         image: imageUrl,
+        category: formData.category as "Fiction" | "Science" | "SelfDevelopment" | "Poetry" | "Religious"
       };
 
-
-      console.log(formData)
-      await addProduct({ ...productData, image: imageUrl }).unwrap();
+      console.log(formData);
+      await addProduct(productData).unwrap();
       toast.success("Book added successfully!");
       setFormData({
         title: "",
@@ -72,8 +72,9 @@ const AddProduct = () => {
         quantity: 0,
         inStock: true
       });
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error("Failed to add book");
+      console.error("ErPage adding book:", error);
     } finally {
       setIsLoading(false);
     }

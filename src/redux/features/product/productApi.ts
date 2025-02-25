@@ -10,6 +10,7 @@ export interface Product {
   rating: number;
   quantity: number;
   inStock: boolean;
+  data?: Product;
 }
 
 const productApi = baseApi.injectEndpoints({
@@ -19,7 +20,6 @@ const productApi = baseApi.injectEndpoints({
         url: `/allproducts${queryString}`,
         method: "GET",
       }),
-      providesTags: ["Products"],
     }),
     addProduct: builder.mutation<Product, Partial<Product>>({
       query: (newProduct) => ({

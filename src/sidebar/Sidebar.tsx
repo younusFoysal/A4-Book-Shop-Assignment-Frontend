@@ -27,7 +27,7 @@ const Sidebar = () => {
     setActive(!isActive);
   };
 
-  const isCurrentPath = (path) => {
+  const isCurrentPath = (path: string) => {
     if (path === "/dashboard") {
       return location.pathname === path
           ? "bg-[#04345c] text-white font-semibold hover:text-white hover:bg-[#048ed6]"

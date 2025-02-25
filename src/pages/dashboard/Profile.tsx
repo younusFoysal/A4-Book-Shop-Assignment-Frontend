@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
-import { User,  Lock, Camera } from "lucide-react";
+import { User,  Lock } from "lucide-react";
 import UseUser from "@/hook/UseUser";
 import {useGetUserQuery, useUpdateuserMutation} from "@/redux/features/users/userApi";
 import { toast } from "sonner";
 import {useChangePasswordMutation, useLoginMutation} from "@/redux/features/auth/authApi.ts";
+
+
 
 const Profile = () => {
     const userData = UseUser();
@@ -14,9 +16,11 @@ const Profile = () => {
     //const [login] = useLoginMutation();
 
 
-    const {  data: userD,  refetch, isLoading } = useGetUserQuery(userData?.id);
+    const userId = userData?.id ?? "";
+    const {  data: userD,  refetch, isLoading } = useGetUserQuery(userId);
     //console.log(userD?.data);
-    const user = userD?.data
+
+    const user = userD?.data ?? null;
     console.log(user);
 
     const [formData, setFormData] = useState({
@@ -27,8 +31,8 @@ const Profile = () => {
     useEffect(() => {
         if (userD?.data) {
             setFormData({
-                name: userD.data.name,
-                email: userD.data.email,
+                name: userD?.data?.name,
+                email: userD.email,
             });
         }
     }, [userD]);
@@ -39,19 +43,19 @@ const Profile = () => {
         confirmPassword: "",
     });
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
     };
 
-    const handleUpdateProfile = async (e) => {
+    const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             await updateUser({
-                userId: userData?.id,
+                userId: userData?.id ?? "",
                 updateduser: formData,
             }).unwrap();
 
@@ -60,16 +64,16 @@ const Profile = () => {
 
             toast.success("Profile updated successfully");
             setIsEditing(false);
-        } catch (error) {
+        } catch (err) {
+            console.error(err);
             toast.error("Failed to update profile");
         }
     };
 
-
     const [login] = useLoginMutation();
     const [changePassword] = useChangePasswordMutation();
 
-    const handleUpdatePassword = async (e) => {
+    const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
@@ -87,15 +91,8 @@ const Profile = () => {
 
             // Update password
             await changePassword({
-                userData: {
-                    email: userData?.email,
-                    userId: userData?.id,
-                    role: userData?.role,
-                },
-                passwordData: {
-                    oldPassword: passwordForm.currentPassword,
-                    newPassword: passwordForm.newPassword,
-                },
+                oldPassword: passwordForm.currentPassword,
+                newPassword: passwordForm.newPassword,
             }).unwrap();
 
             toast.success("Password updated successfully");
@@ -105,15 +102,19 @@ const Profile = () => {
                 confirmPassword: "",
             });
 
-        } catch (error) {
-            if (error?.data?.message === "Password do not matched") {
-                toast.error("Current password is incorrect");
+        } catch (err: unknown) {
+            if (err instanceof Error && 'data' in err) {
+                const errorData = err as { data?: { message?: string } };
+                if (errorData.data?.message === "Password do not matched") {
+                    toast.error("Current password is incorrect");
+                } else {
+                    toast.error(errorData.data?.message || "Failed to update password");
+                }
             } else {
-                toast.error(error?.data?.message || "Failed to update password");
+                toast.error("Failed to update password");
             }
         }
     };
-
 
 
     if (isLoading) {
@@ -173,19 +174,19 @@ const Profile = () => {
                             <div className="flex items-center gap-6 mb-8">
                                 <div className="relative">
                                     <img
-                                        src={user?.avatar || "https://img.freepik.com/premium-vector/avatar-icon0002_750950-43.jpg"}
+                                        src={"https://img.freepik.com/premium-vector/avatar-icon0002_750950-43.jpg"}
                                         alt="Profile"
                                         className="w-24 h-24 rounded-full object-cover"
                                     />
-                                    {isEditing && (
-                                        <button
-                                            className="absolute bottom-0 right-0 p-2 bg-[#04345c] rounded-full text-white">
-                                            <Camera size={16}/>
-                                        </button>
-                                    )}
+                                    {/*{isEditing && (*/}
+                                    {/*    <button*/}
+                                    {/*        className="absolute bottom-0 right-0 p-2 bg-[#04345c] rounded-full text-white">*/}
+                                    {/*        <Camera size={16}/>*/}
+                                    {/*    </button>*/}
+                                    {/*)}*/}
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold">{user?.name}</h3>
+                                    <h3 className="text-xl font-semibold">{user?.name} name</h3>
                                     <p className="text-gray-500">{user?.role}</p>
                                 </div>
                             </div>

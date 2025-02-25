@@ -14,6 +14,11 @@ import { createBrowserRouter } from "react-router-dom";
 import Alluser from "@/pages/dashboard/AllUser.tsx";
 import Allorder from "@/pages/dashboard/Allorder.tsx";
 import Profile from "@/pages/dashboard/Profile.tsx";
+import PrivateRoute from "@/router/PrivateRoute.tsx";
+
+import ContactUs from "@/components/home/ContactUs.tsx";
+import AboutUs from "@/components/home/AboutUs.tsx";
+import ErPage from "@/components/partials/ErPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -23,12 +28,14 @@ export const router = createBrowserRouter([
       { index: true, element: <App /> },
       { path: "/allProducts", element: <AllProducts /> },
       { path: "/products/:id", element: <SingleProduct /> },
-      { path: "/checkout/:id", element: <Checkoutpage /> },
+      { path: "/checkout/:id", element: <PrivateRoute><Checkoutpage /></PrivateRoute> },
+      { path: "/contact", element: <ContactUs/> },
+      { path: "/about", element: <AboutUs/> }
     ],
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute> ,
     children: [
       {
         index: true,
@@ -68,4 +75,8 @@ export const router = createBrowserRouter([
     path: "/signup",
     element: <Register />,
   },
+  {
+    path: "*",
+    element: <ErPage/>,
+  }
 ]);

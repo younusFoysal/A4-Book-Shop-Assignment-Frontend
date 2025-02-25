@@ -8,6 +8,8 @@ import CTA from "@/components/home/CTA.tsx";
 import TopCategories from "@/components/home/TopCategories.tsx";
 import TopPopularBooks from "@/components/home/TopPopularBooks.tsx";
 import FAQ from "@/components/home/FAQ.tsx";
+import Reviews from "@/components/home/Reviews.tsx";
+import BackToTop from "@/components/home/BackToTop.tsx";
 
 const App = () => {
   return (
@@ -20,9 +22,11 @@ const App = () => {
         <TopCategories/>
         <CTA/>
         <FAQ/>
+      <Reviews />
 
         <Cookie/>
         <Features/>
+        <BackToTop/>
     </div>
   );
 };

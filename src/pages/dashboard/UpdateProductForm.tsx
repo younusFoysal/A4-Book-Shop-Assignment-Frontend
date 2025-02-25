@@ -7,8 +7,10 @@ import { X } from "lucide-react";
 const UpdateProductForm = () => {
   const { productId } = useParams<{ productId: string }>();
   const [updateProduct] = useUpdateProductMutation();
-  const { data: productData, isLoading: isFetching } = useGetSingleProductQuery(productId as string);
+  const { data: productD, isLoading: isFetching } = useGetSingleProductQuery(productId as string);
   const [isLoading, setIsLoading] = useState(false);
+
+  const productData = productD?.data ?? null;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -23,10 +25,17 @@ const UpdateProductForm = () => {
   });
 
   useEffect(() => {
-    if (productData?.data) {
+    if (productData) {
       setFormData({
-        ...productData.data,
-        image: null
+        title: productData.title,
+        author: productData.author,
+        price: productData.price,
+        category: productData.category,
+        description: productData.description,
+        image: null,
+        rating: productData.rating,
+        quantity: productData.quantity,
+        inStock: productData.inStock
       });
     }
   }, [productData]);
@@ -57,7 +66,7 @@ const UpdateProductForm = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      let imageUrl = productData?.data.image || "";
+      let imageUrl = productData?.image || "";
       if (formData.image) {
         imageUrl = await handleImageUpload(formData.image);
       }
@@ -67,7 +76,8 @@ const UpdateProductForm = () => {
         image: imageUrl,
         price: Number(formData.price),
         rating: Number(formData.rating),
-        quantity: Number(formData.quantity)
+        quantity: Number(formData.quantity),
+        category: formData.category as "Fiction" | "Science" | "SelfDevelopment" | "Poetry" | "Religious"
       };
 
       await updateProduct({
@@ -76,8 +86,9 @@ const UpdateProductForm = () => {
       }).unwrap();
 
       toast.success("Book updated successfully!");
-    } catch (error) {
+    } catch (err) {
       toast.error("Failed to update book");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -138,10 +149,10 @@ const UpdateProductForm = () => {
                 >
                   <option value="">Select Category</option>
                   <option value="Fiction">Fiction</option>
-                  <option value="NonFiction">Non Fiction</option>
+                  <option value="Science">Science</option>
                   <option value="SelfDevelopment">Self Development</option>
-                  <option value="Business">Business</option>
-                  <option value="Technology">Technology</option>
+                  <option value="Poetry">Poetry</option>
+                  <option value="Religious">Religious</option>
                 </select>
               </div>
 
@@ -207,9 +218,9 @@ const UpdateProductForm = () => {
                     className="w-full px-4 py-2 border rounded-3xl text-sm focus:ring-2 focus:ring-[#04345c]/10 focus:border-[#04345c] transition-all outline-none font-normal leading-7 text-gray-900 placeholder-gray-500 bg-white border-[#04345c]/70"
                     accept="image/*"
                 />
-                {productData?.data.image && (
+                {productData?.image && (
                     <img
-                        src={productData.data.image}
+                        src={productData.image}
                         alt="Current Product"
                         className="mt-2 h-32 w-32 object-cover rounded-md"
                     />

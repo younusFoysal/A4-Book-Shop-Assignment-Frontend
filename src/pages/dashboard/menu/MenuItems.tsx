@@ -1,6 +1,12 @@
 import { NavLink } from "react-router-dom";
 
-const MenuItems = ({ address, label, icon: Icon }) => {
+interface MenuItemProps {
+  address: string;
+  label: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+const MenuItems: React.FC<MenuItemProps> = ({ address, label, icon: Icon }) => {
   return (
     <NavLink
       to={address}

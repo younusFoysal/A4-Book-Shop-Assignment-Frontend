@@ -7,15 +7,14 @@ import UseUser from "@/hook/UseUser";
 import { useState } from "react";
 
 const SignUp = () => {
-  const [register, ] = useRegisterMutation();
+  const [register] = useRegisterMutation();
   const user = UseUser();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate()
 
-
-  const [state, formAction] = useActionState(
-      async (_prevState: any, formData: FormData) => {
+  const [, formAction] = useActionState(
+      async (_prevState: unknown, formData: FormData) => {
         try {
           setIsLoading(true)
           const userdata = Object.fromEntries(formData.entries());
@@ -25,9 +24,9 @@ const SignUp = () => {
             icon: "🎉",
           });
           navigate("/login")
-        } catch (error: any) {
-          setIsLoading(true)
-          toast.error(error?.message || "Registration failed", {
+        } catch (error: unknown) {
+          setIsLoading(false)
+          toast.error((error as Error)?.message || "Registration failed", {
             icon: "❌",
           });
         }
@@ -41,7 +40,6 @@ const SignUp = () => {
       <div className="justify-center py-12 px-4 sm:px-6 lg:px-8  w-full min-h-screen flex items-center bg-[#010e28] bg-[linear-gradient(to_bottom,_#082740_1px,_transparent_1px),_linear-gradient(to_right,_#082740_1px,_transparent_1px)] [background-size:30px_30px] bg-center overflow-x-hidden animate-bgmove">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            {/*<UserPlus className="mx-auto h-12 w-12 text-[#04345c]" />*/}
             <h2 className="mt-6 text-5xl font-extrabold text-white uppercase">
               Create Account
             </h2>

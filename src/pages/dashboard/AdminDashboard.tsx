@@ -4,6 +4,18 @@ import {useGetAlluserQuery} from "@/redux/features/users/userApi.ts";
 import {BookOpen, ChevronDown, ChevronUp, DollarSign, ShoppingBag, TrendingUp, Users} from "lucide-react";
 import {Link} from "react-router-dom";
 
+
+type Order = {
+    totalPrice: number;
+    paymentStatus: string;
+};
+
+type Product = {
+    inStock: boolean;
+};
+
+
+
 const AdminDashboard = () => {
 
     const { data: ordersResponse } = useGetAllOrderQuery("");
@@ -15,10 +27,10 @@ const AdminDashboard = () => {
     const users = usersResponse?.data || [];
 
     // Calculate metrics
-    const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0);
-    const pendingOrders = orders.filter(order => order.paymentStatus === "Pending").length;
-    const outOfStockProducts = products.filter(product => !product.inStock).length;
-    const activeUsers = users.filter(user => !user.isBlocked).length;
+    const totalRevenue = orders.reduce((sum: number, order: Order) => sum + order.totalPrice, 0);
+    const pendingOrders = orders.filter((order: Order) => order.paymentStatus === "Pending").length;
+    const outOfStockProducts = products.filter((product: Product) => !product.inStock).length;
+    const activeUsers = users.filter((user: { isBlocked: boolean }) => !user.isBlocked).length;
 
     const recentOrders = orders.slice(0, 5);
     const topProducts = [...products]
@@ -103,7 +115,7 @@ const AdminDashboard = () => {
                             All</Link>
                     </div>
                     <div className="space-y-4">
-                        {recentOrders.map((order) => (
+                        {recentOrders.map((order: any) => (
                             <div key={order._id}
                                  className="flex justify-between border border-slate-200 drop-shadow-md transition duration-300 items-center p-3 hover:bg-gray-50 rounded-xl">
                                 <div>

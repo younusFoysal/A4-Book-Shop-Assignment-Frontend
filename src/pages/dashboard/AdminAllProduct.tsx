@@ -10,7 +10,7 @@ const AdminAllProduct = () => {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [sortOrder, setSortOrder] = useState("desc");
 
-    const { data: productsResponse, isLoading, refetch } = useGetAllProductsQuery(
+    const { data: productsResponse, refetch } = useGetAllProductsQuery(
         `?search=${searchTerm}&category=${selectedCategory}&sortBy=${sortOrder}`
     );
     console.log("productsResponse", productsResponse);
@@ -39,15 +39,15 @@ const AdminAllProduct = () => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setIsTableView(false)}
-                            className={`p-2 rounded-lg ${!isTableView ? 'bg-[#04345c] text-white' : 'bg-gray-100'}`}
+                            className={`p-2 px-3 flex items-center gap-2 rounded-3xl ${!isTableView ? 'bg-[#04345c] text-white' : 'bg-gray-100'}`}
                         >
-                            <LayoutGrid size={20} />
+                            <LayoutGrid size={20} /> Grid
                         </button>
                         <button
                             onClick={() => setIsTableView(true)}
-                            className={`p-2 rounded-lg ${isTableView ? 'bg-[#04345c] text-white' : 'bg-gray-100'}`}
+                            className={`p-2 px-3 flex items-center gap-2 rounded-3xl ${isTableView ? 'bg-[#04345c] text-white' : 'bg-gray-100'}`}
                         >
-                            <Table size={20} />
+                            <Table size={20} /> Table
                         </button>
                     </div>
                     <Link
@@ -105,7 +105,7 @@ const AdminAllProduct = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {products.map((book) => (
+                        {products.map((book: any) => (
                             <tr key={book._id} className="bg-white border-b hover:bg-gray-50">
                                 <td className="px-6 py-3">
                                     <img src={book.image} alt={book.title} className="w-12 h-12 object-cover rounded" />
@@ -137,7 +137,7 @@ const AdminAllProduct = () => {
             ) : (
                 // Existing grid view code remains the same
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products.map((book) => (
+                    {products.map((book: any) => (
                         <div key={book._id}
                              className="bg-white rounded-3xl drop-shadow-lg hover:drop-shadow-2xl overflow-hidden ">
                             <div className="relative h-48 overflow-hidden">

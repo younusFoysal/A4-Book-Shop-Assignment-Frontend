@@ -1,15 +1,18 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import {Product, useGetAllProductsQuery} from "@/redux/features/product/productApi";
 import {Star, BookOpen, Calendar, Tag, Award, Package, Clock, BookmarkCheck, BookmarkX} from 'lucide-react';
+import UseUser from "@/hook/UseUser.tsx";
+import {toast} from "sonner";
 
 const SingleProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const user = UseUser();
 
   const { data: productsResponse, isLoading, isError } = useGetAllProductsQuery("");
   const products = productsResponse?.data || [];
-  const product = products.find((p) => p._id === id);
+  const product = products.find((p: Product) => p._id === id);
 
   if (isLoading) {
     return (
@@ -23,7 +26,11 @@ const SingleProduct: React.FC = () => {
     return <div className="text-center text-red-500">Product not found</div>;
   }
 
+  console.log(user)
   const handleBuyNow = () => {
+    if (user === null) {
+      toast.info("Please login first")
+    }
     navigate(`/checkout/${product._id}`);
   };
 

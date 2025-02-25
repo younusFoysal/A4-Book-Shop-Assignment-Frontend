@@ -1,9 +1,8 @@
-import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
+import {Product, useGetAllProductsQuery} from "@/redux/features/product/productApi";
 import { Search, Star, SlidersHorizontal } from "lucide-react";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import  { useState } from "react";
 import ProductCard from "@/components/home/ProductCard.tsx";
+
 
 const AllProductsPage = () => {
     const [showFilters, setShowFilters] = useState(false);
@@ -132,7 +131,9 @@ const AllProductsPage = () => {
 
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {products.slice(0, 16).map((product) => (<ProductCard key={product._id} product={product} />))}
+                            {products.slice(0, 16).map((product: Product) => (
+                                <ProductCard key={product._id} product={product} />
+                            ))}
 
             </div>
         </div>

@@ -7,6 +7,7 @@ import { BookOpen, CreditCard, Package, ShoppingBag } from 'lucide-react';
 import axios from "axios";
 import {toast} from "sonner";
 import UseUser from "@/hook/UseUser.tsx";
+import {useAddOrderMutation} from "@/redux/features/orders/OrderApi.ts";
 
 const stripePromise = loadStripe("pk_test_51M1YVBL6YvgZDvxuWiJT39NxnF7fG3kDudsD3gOxgUw6WmJusFHhvT4RHti88caAiBMIvOqptpW3smjH3c1mPlZ600PtOgXZj6");
 
@@ -14,7 +15,8 @@ const CheckoutPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: productsResponse, isLoading, isError } = useGetAllProductsQuery("");
   const products = productsResponse?.data || [];
-  const product = products.find((p) => p._id === id);
+  const product = products.find((p: { _id: string }) => p._id === id);
+  const [addOrder] = useAddOrderMutation();
 
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -60,7 +62,7 @@ const CheckoutPage: React.FC = () => {
       payment_method: {
         card: cardElement!,
         billing_details: {
-          name: user?.name,
+          name: user?.name || '',
         },
       },
     });
@@ -76,21 +78,23 @@ const CheckoutPage: React.FC = () => {
         quantity,
         totalPrice,
         user: {
-          name: user?.name,
-          email: user?.email,
+          name: user?.name || '',
+          email: user?.email || '',
         },
         paymentStatus: "pending",
         paymentId: paymentIntent.id,
       };
 
       try {
-        await axios.post("http://localhost:5000/api/orders", orderData);
+        await addOrder(orderData).unwrap();
+        //await axios.post("http://localhost:5000/api/orders", orderData);
         toast.success("Order placed successfully!");
         navigate("/");
         // alert("Order placed successfully!");
       } catch (err) {
         console.error("Order saving failed:", err);
-        alert("Order could not be saved. Please try again.");
+        toast.error("Order could not be saved. Please try again.");
+        //alert("Order could not be saved. Please try again.");
       }
     }
   };

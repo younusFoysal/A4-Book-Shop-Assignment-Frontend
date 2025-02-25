@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import UseUser from "@/hook/UseUser.tsx";
 
+
 const Allorder = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("desc");
@@ -100,7 +101,7 @@ const Allorder = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.map((data, index) => (
+                    {orders.map((data: any, index: number) => (
                         <tr key={data._id} className="bg-white border-b hover:bg-gray-50">
                             <td className="px-6 py-3">{index + 1}</td>
                             <td className="px-6 py-3 font-medium text-gray-900">{data.user.name}</td>

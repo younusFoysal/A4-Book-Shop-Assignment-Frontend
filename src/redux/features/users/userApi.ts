@@ -7,6 +7,7 @@ interface TUser {
     role: "admin" | "user";
     isBlocked: boolean;
     id: string;
+    data?: TUser;
 }
 
 const UserApi = baseApi.injectEndpoints({

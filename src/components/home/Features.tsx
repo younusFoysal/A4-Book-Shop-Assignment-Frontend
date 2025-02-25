@@ -13,12 +13,12 @@ const Features = () => {
                     <div className="max-w-[550px] mt-16">
                         <p className="text-xl text-[#048ed6]">Discover the joy of reading with our extensive collection of books and premium services.</p>
                         <h2 className="text-[30px] leading-[48px] md:text-[50px] md:leading-[68px] mt-5 mb-16 font-bold text-[#04345c]">Your Journey Through Literature Starts Here</h2>
-                        <button className="w-full flex items-center justify-between outline-gray-600 max-w-[350px] text-xl font-bold sm:text-lg rounded-[38px] bg-[#04345c] text-white py-4 px-6 sm:px-9">
+                        <button className="w-full flex justify-center items-center  outline-gray-600 max-w-[350px] sm:text-lg bg-[#04345c] hover:bg-white border border-[#04345c] text-white hover:text-[#04345c] rounded-full font-semibold transition-colors duration-500 text-base drop-shadow-lg disabled:opacity-50  py-4 px-6 sm:px-9">
                             <span>Browse Collection</span>
                         </button>
                     </div>
                     <div className="flex md:mt-[-70px] items-center flex-col md:grid md:grid-cols-[220px_220px] lg:grid-cols-[250px_250px] grid-rows-8 gap-[60px] md:gap-[30px] lg:gap-[45px]">
-                        <div className="col-start-1 col-end-2 row-start-1 row-end-4 bg-[#ffffff] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8">
+                        <div className="col-start-1 col-end-2 row-start-1 row-end-4 bg-[#ffffff] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8 hover:shadow-lg hover:scale-105 transition-all duration-500 ease-in-out">
                             <div>
                                 <span className="text-[72px] text-black leading-[93px] font-bold">1<span className="text-[#048ed6]">.</span></span>
                                 <p>
@@ -28,7 +28,7 @@ const Features = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="col-start-2 col-end-3 row-start-2 row-end-5 bg-[#048ed6] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8">
+                        <div className="col-start-2 col-end-3 row-start-2 row-end-5 bg-[#048ed6] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8 hover:shadow-lg hover:scale-105 transition-all duration-500 ease-in-out">
                             <div>
                                 <span className="text-[72px] text-black leading-[93px] font-bold">2<span className="text-[#fff]">.</span></span>
                                 <p>
@@ -38,7 +38,7 @@ const Features = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="col-start-1 col-end-2 row-start-4 row-end-7 bg-[#048ed6] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8">
+                        <div className="col-start-1 col-end-2 row-start-4 row-end-7 bg-[#048ed6] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8 hover:shadow-lg hover:scale-105 transition-all duration-500 ease-in-out">
                             <div>
                                 <span className="text-[72px] text-black leading-[93px] font-bold">3<span className="text-[#fff]">.</span></span>
                                 <p>
@@ -48,7 +48,7 @@ const Features = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="col-start-2 col-end-3 row-start-5 row-end-8 bg-[#fff] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8">
+                        <div className="col-start-2 col-end-3 row-start-5 row-end-8 bg-[#fff] rounded-[40px] w-[250px] md:w-[220px] lg:w-[250px] p-8 md:p-4 lg:p-8 hover:shadow-lg hover:scale-105 transition-all duration-500 ease-in-out">
                             <div>
                                 <span className="text-[72px] text-black leading-[93px] font-bold">4<span className="text-[#048ed6]">.</span></span>
                                 <p>

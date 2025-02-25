@@ -3,7 +3,7 @@ import { setUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { verifyToken } from "@/utils/VerifyToken";
 import { useActionState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import {Link, Navigate, useLocation, useNavigate} from "react-router-dom";
 import { toast } from "sonner";
 import { Loader, Mail, Lock, Eye, EyeOff, LogIn, UserPlus } from "lucide-react";
 import UseUser from "@/hook/UseUser";
@@ -15,22 +15,29 @@ const Login = () => {
   const user = UseUser();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state || "/";
+  console.log(from)
 
   const [state, formAction] = useActionState(
       async (_prevState: any, formData: FormData) => {
         try {
+          console.log(state)
           setIsLoading(true)
           const userdata = Object.fromEntries(formData.entries());
           const res = await login(userdata).unwrap();
           const userData = verifyToken(res.data.token);
           setIsLoading(false)
           dispatch(setUser({ user: userData, token: res.data.token }));
+          navigate(from)
           toast.success("Welcome back!", {
             icon: "👋",
           });
         } catch (error: any) {
           setIsLoading(false)
-          toast.error(error?.message || "Invalid credentials", {
+          //console.log(error)
+          toast.error(error?.data?.message || "Invalid credentials", {
             icon: "❌",
           });
         }
@@ -40,7 +47,7 @@ const Login = () => {
 
   //console.log(isLoading)
 
-  if (user) return <Navigate to="/" />;
+  if (user) return <Navigate to="/"  state={location.pathname} replace={true} />;
 
   return (
 

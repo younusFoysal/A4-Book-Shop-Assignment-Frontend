@@ -4,9 +4,9 @@ import {FaBook} from "react-icons/fa";
 const Cta = () => {
     return (
         <div>
-            <section className="w-full max-w-5xl mx-auto px-5 my-10 mb-36 lg:px-0">
+            <section className="w-full max-w-5xl mx-auto px-5 my-10 mb-36 lg:px-0 ">
                 <div
-                    className="bg-[#04345c] p-6 md:p-10 rounded-3xl mx-auto flex flex-col gap-y-5 justify-center items-center relative">
+                    className="bg-[#04345c] p-6 md:p-10 rounded-3xl mx-auto flex flex-col gap-y-5 justify-center items-center relative hover:scale-105 transition-all duration-500 ease-in-out hover:drop-shadow-lg">
                     <FaBook className="absolute right-0 top-0 overflow-hidden h-52 w-52 text-[#F2F9FB] opacity-40 rotate-12" />
                     <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center uppercase">
                         Join our book club for exclusive deals!

@@ -7,11 +7,12 @@ export default {
       keyframes: {
         bgmove: {
           "0%": { backgroundPosition: "0 0" },
-          "100%": { backgroundPosition: "0 100%" }
+          "50%": { backgroundPosition: "0 50%" },
+          "100%": { backgroundPosition: "0 0" }
         },
       },
       animation: {
-        bgmove: 'bgmove 40s infinite',
+        bgmove: 'bgmove 40s linear  infinite',
       }
     },
   },

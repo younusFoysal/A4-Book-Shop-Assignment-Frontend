@@ -11,9 +11,8 @@ const UserDashboard = () => {
 
     const orders = ordersResponse?.data || [];
     const totalOrders = orders.length;
-    const pendingOrders = orders.filter(order => order.paymentStatus === "pending").length;
-    const completedOrders = orders.filter(order => order.paymentStatus === "Success").length;
-    const totalSpent = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+    const pendingOrders = orders.filter((order: { paymentStatus: string }) => order.paymentStatus === "pending").length;    const completedOrders = orders.filter((order: { paymentStatus: string }) => order.paymentStatus === "Success").length;
+    const totalSpent = orders.reduce((sum: number, order: { totalPrice: number }) => sum + order.totalPrice, 0);
 
     return (
         <div className="p-6 space-y-6">
@@ -90,7 +89,7 @@ const UserDashboard = () => {
                     </Link>
                 </div>
                 <div className="space-y-4">
-                    {orders.slice(0, 5).map((order) => (
+                    {orders.slice(0, 5).map((order: { _id: string; productImage: string; productName: string; quantity: number; totalPrice: number; paymentStatus: string }) => (
                         <div key={order._id}
                              className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-xl border border-gray-100 transition duration-200">
                             <div className="flex items-center gap-4">

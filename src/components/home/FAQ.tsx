@@ -3,7 +3,7 @@ import { useState } from "react";
 const Faq = () => {
     const [openIndex, setOpenIndex] = useState(null);
 
-    const toggleAccordion = (index) => {
+    const toggleAccordion = (index: any) => {
         setOpenIndex(openIndex === index ? null : index);
     };
 
@@ -55,34 +55,34 @@ const Faq = () => {
             </div>
 
             <section className="product-infomation">
-                <div className="flex flex-col lg:flex-row bg-[#e8edd7] rounded-[32px] lg:h-[778px]">
+                <div className="flex flex-col lg:flex-row bg-[#b3c2ce] rounded-[32px] lg:h-[778px]">
                     <div className="w-full lg:w-1/2 h-full">
                         <img
                             id="heroImage"
                             className={`w-full h-full object-cover lg:rounded-l-[32px] rounded-t-[32px] transition-opacity duration-1000 ${openIndex !== null ? 'opacity-0' : 'opacity-100'}`}
                             aria-hidden="true"
                             src={openIndex !== null ? faqs[openIndex].image : "https://images.squarespace-cdn.com/content/v1/5d8fc40ed3f19b71ebb703a6/13a3cc61-4224-4642-aff0-32ab44fd4325/Think+and+Grow+Rich_Napoleon+Hill.jpg"}
-                            alt=""
-                            onLoad={(e) => e.target.classList.remove('opacity-0')}
+                            alt="imagine"
+                            onLoad={(e) => (e.target as HTMLImageElement).classList.remove('opacity-0')}
                         />
                     </div>
                     <div className="w-full lg:w-1/2">
                         <div className="p-10">
-                            <h2 className="text-[2.2rem] font-semibold leading-tight mb-6 transition-all duration-600">
+                            <h2 className="text-[2.2rem] text-[#04345c] font-semibold leading-tight mb-6 transition-all duration-600">
                                 Frequently Asked Questions
                             </h2>
                             <section className="accordion">
-                                <div className="bg-[#dce4c3] rounded-[20px]">
+                                <div className="bg-[#68859d] rounded-[20px]">
                                     {faqs.map((faq, index) => (
                                         <div key={index}>
                                             <div
                                                 className="accordion-header flex justify-between items-center p-6 cursor-pointer transition-all duration-300"
                                                 onClick={() => toggleAccordion(index)}
                                             >
-                                                <div className="accordion-title flex-1 mr-6 text-left text-[16px] leading-6 font-bold transition-all duration-200">
+                                                <div className="accordion-title flex-1 mr-6 text-white/80  text-left text-[16px] leading-6 font-bold transition-all duration-200">
                                                     {faq.question}
                                                 </div>
-                                                <span className="accordion-icon h-[30px] w-[30px] rounded-full bg-white flex items-center justify-center">
+                                                <span className="accordion-icon h-[30px] w-[30px] rounded-full bg-white/80 flex items-center justify-center">
                                                     <svg
                                                         className={`w-4 h-4 text-[#5f6368] transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
                                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ const Faq = () => {
                                                     </svg>
                                                 </span>
                                             </div>
-                                            <div className={`accordion-panel overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-40 p-6' : 'max-h-0 p-0'}`}>
+                                            <div className={`accordion-panel overflow-hidden transition-all text-white/90 duration-300 ${openIndex === index ? 'max-h-40 p-6' : 'max-h-0 p-0'}`}>
                                                 <p className="mb-4 leading-6">{faq.answer}</p>
                                             </div>
                                         </div>
