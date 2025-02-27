@@ -19,6 +19,7 @@ import PrivateRoute from "@/router/PrivateRoute.tsx";
 import ContactUs from "@/components/home/ContactUs.tsx";
 import AboutUs from "@/components/home/AboutUs.tsx";
 import ErPage from "@/components/partials/ErPage.tsx";
+import Services from "@/components/partials/Services.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -30,7 +31,8 @@ export const router = createBrowserRouter([
       { path: "/products/:id", element: <SingleProduct /> },
       { path: "/checkout/:id", element: <PrivateRoute><Checkoutpage /></PrivateRoute> },
       { path: "/contact", element: <ContactUs/> },
-      { path: "/about", element: <AboutUs/> }
+      { path: "/about", element: <AboutUs/> },
+      { path: "/services", element: <Services/>}
     ],
   },
   {
