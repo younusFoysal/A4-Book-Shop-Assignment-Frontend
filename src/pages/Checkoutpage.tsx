@@ -37,7 +37,7 @@ const CheckoutPage: React.FC = () => {
   useEffect(() => {
     const createPaymentIntent = async () => {
       if (totalPrice > 0) {
-        const { data } = await axios.post("http://localhost:5000/api/create-payment-intent", {
+        const { data } = await axios.post("https://bookhubserver.vercel.app/api/create-payment-intent", {
           amount: totalPrice * 100,
         });
         setClientSecret(data.clientSecret);
